@@ -7,4 +7,5 @@ venv
 *.dll
 *.pyd
 *.mmdb
+.env
 
