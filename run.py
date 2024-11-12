@@ -15,5 +15,3 @@ df = df.with_columns(country=ip_lookup_country("ip"))
 df = df.with_columns(asn=ip_lookup_asn("ip"))
 
 print(df)
-
-df.write_csv("out.csv")
