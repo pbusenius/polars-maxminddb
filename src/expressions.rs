@@ -1,8 +1,8 @@
 #![allow(clippy::unused_unit)]
 use polars::prelude::*;
 use pyo3_polars::derive::polars_expr;
-use std::fmt::Write;
-use maxminddb::geoip2;
+use std::{fmt::Write, net::IpAddr};
+use maxminddb::{geoip2, Reader};
 
 
 #[polars_expr(output_type=String)]
@@ -12,7 +12,7 @@ fn ip_lookup_city(inputs: &[Series]) -> PolarsResult<Series> {
 
     let out: StringChunked = ca.apply_into_string_amortized(|value: &str, output: &mut String| {
         let city_name: &str;
-        let ip= value.parse().unwrap();
+        let ip: IpAddr = value.parse().unwrap();
 
         let resp: geoip2::City = reader.lookup(ip).unwrap();
         
@@ -37,11 +37,11 @@ fn ip_lookup_city(inputs: &[Series]) -> PolarsResult<Series> {
 #[polars_expr(output_type=String)]
 fn ip_lookup_country(inputs: &[Series]) -> PolarsResult<Series> {
     let ca: &StringChunked = inputs[0].str()?;
-    let reader = maxminddb::Reader::open_readfile("GeoLite2-City.mmdb").unwrap();
+    let reader: Reader<Vec<u8>> = maxminddb::Reader::open_readfile("GeoLite2-City.mmdb").unwrap();
 
     let out: StringChunked = ca.apply_into_string_amortized(|value: &str, output: &mut String| {
         let country_name: &str;
-        let ip= value.parse().unwrap();
+        let ip: IpAddr = value.parse().unwrap();
 
         let resp: geoip2::City = reader.lookup(ip).unwrap();
         
@@ -71,7 +71,7 @@ fn ip_lookup_asn(inputs: &[Series]) -> PolarsResult<Series> {
 
     let out: StringChunked = ca.apply_into_string_amortized(|value: &str, output: &mut String| {
         let asn_name: &str;
-        let ip= value.parse().unwrap();
+        let ip: IpAddr = value.parse().unwrap();
 
         let resp: geoip2::Asn = reader.lookup(ip).unwrap();
         
@@ -81,7 +81,6 @@ fn ip_lookup_asn(inputs: &[Series]) -> PolarsResult<Series> {
         }
 
         write!(output, "{}", asn_name).unwrap()
-
     });
 
     Ok(out.into_series())
