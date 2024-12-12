@@ -70,7 +70,7 @@ The output will include the city, country, and ASN name information as strings. 
 ```
 shape: (4, 4)
 ┌────────────────┬───────────────────┬─────────┬─────────────────────────────────┐
-│ ip             ┆ city              ┆ country ┆ asn                             │
+│ ip             ┆ city              ┆ country ┆ asn_name                        │
 │ ---            ┆ ---               ┆ ---     ┆ ---                             │
 │ str            ┆ str               ┆ str     ┆ str                             │
 ╞════════════════╪═══════════════════╪═════════╪═════════════════════════════════╡
