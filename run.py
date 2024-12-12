@@ -1,17 +1,25 @@
 import polars as pl
-from polars_maxminddb import ip_lookup_city
-from polars_maxminddb import ip_lookup_country
-from polars_maxminddb import ip_lookup_asn
+from polars_maxminddb import ip_lookup_city, ip_lookup_country, ip_lookup_asn
+
+# Example DataFrame with IP addresses
+df = pl.DataFrame({
+    "ip_addresses": ["92.200.50.6", "195.90.212.198", "95.173.223.186", "121.37.156.226"],
+})
 
 
-df = pl.DataFrame(
-    {
-        "ip": ["92.200.50.6", "195.90.212.198", "95.173.223.186", "121.37.156.226"],
-    }
+# Perform city lookup
+df = df.with_columns(
+    ip_lookup_city(df["ip_addresses"]).alias("city")
 )
 
-df = df.with_columns(city=ip_lookup_city("ip"))
-df = df.with_columns(country=ip_lookup_country("ip"))
-df = df.with_columns(asn=ip_lookup_asn("ip"))
+# Perform country lookup
+df = df.with_columns(
+    ip_lookup_country(df["ip_addresses"]).alias("country")
+)
+
+# Perform ASN lookup
+df = df.with_columns(
+    ip_lookup_asn(df["ip_addresses"]).alias("asn_name")
+)
 
 print(df)
