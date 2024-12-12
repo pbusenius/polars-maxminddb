@@ -28,7 +28,7 @@ uv add polars
 Add the plugin to your project. Install it directly from the repository or manually include the Python file.
 
 ```bash
-uv add polars_maxminddb
+uv add polars-maxminddb
 ```
 
 ## Usage
