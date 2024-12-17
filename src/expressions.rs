@@ -6,12 +6,12 @@ use std::{fmt::Write, net::IpAddr};
 use maxminddb::{geoip2, Reader};
 
 #[derive(Deserialize)]
-struct AddSuffixKwargs {
+struct MaxmindDbFileKwargs {
     maxminddb: String,
 }
 
 #[polars_expr(output_type=String)]
-fn ip_lookup_city(inputs: &[Series], kwargs: AddSuffixKwargs) -> PolarsResult<Series> {
+fn ip_lookup_city(inputs: &[Series], kwargs: MaxmindDbFileKwargs) -> PolarsResult<Series> {
     let ca: &StringChunked = inputs[0].str()?;
     let reader = maxminddb::Reader::open_readfile(kwargs.maxminddb).unwrap();
 
@@ -40,7 +40,7 @@ fn ip_lookup_city(inputs: &[Series], kwargs: AddSuffixKwargs) -> PolarsResult<Se
 }
 
 #[polars_expr(output_type=String)]
-fn ip_lookup_country(inputs: &[Series], kwargs: AddSuffixKwargs) -> PolarsResult<Series> {
+fn ip_lookup_country(inputs: &[Series], kwargs: MaxmindDbFileKwargs) -> PolarsResult<Series> {
     let ca: &StringChunked = inputs[0].str()?;
     let reader: Reader<Vec<u8>> = maxminddb::Reader::open_readfile(kwargs.maxminddb).unwrap();
 
@@ -70,7 +70,7 @@ fn ip_lookup_country(inputs: &[Series], kwargs: AddSuffixKwargs) -> PolarsResult
 
 
 #[polars_expr(output_type=String)]
-fn ip_lookup_asn(inputs: &[Series], kwargs: AddSuffixKwargs) -> PolarsResult<Series> {
+fn ip_lookup_asn(inputs: &[Series], kwargs: MaxmindDbFileKwargs) -> PolarsResult<Series> {
     let ca: &StringChunked = inputs[0].str()?;
     let reader = maxminddb::Reader::open_readfile(kwargs.maxminddb).unwrap();
 
