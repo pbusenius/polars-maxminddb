@@ -9,17 +9,17 @@ df = pl.DataFrame({
 
 # Perform city lookup
 df = df.with_columns(
-    ip_lookup_city(df["ip_addresses"]).alias("city")
+    ip_lookup_city(df["ip_addresses"], "GeoLite2-City.mmdb").alias("city")
 )
 
 # Perform country lookup
 df = df.with_columns(
-    ip_lookup_country(df["ip_addresses"]).alias("country")
+    ip_lookup_country(df["ip_addresses"], "GeoLite2-City.mmdb").alias("country")
 )
 
 # Perform ASN lookup
 df = df.with_columns(
-    ip_lookup_asn(df["ip_addresses"]).alias("asn_name")
+    ip_lookup_asn(df["ip_addresses"], "GeoLite2-ASN.mmdb").alias("asn_name")
 )
 
 print(df)

@@ -14,28 +14,31 @@ if TYPE_CHECKING:
 LIB = Path(__file__).parent
 
 
-def ip_lookup_city(expr: IntoExprColumn) -> pl.Expr:
+def ip_lookup_city(expr: IntoExprColumn, maxminddb: str) -> pl.Expr:
     return register_plugin_function(
         args=[expr],
         plugin_path=LIB,
         function_name="ip_lookup_city",
         is_elementwise=True,
+        kwargs={"maxminddb": maxminddb},
     )
 
 
-def ip_lookup_country(expr: IntoExprColumn) -> pl.Expr:
+def ip_lookup_country(expr: IntoExprColumn, maxminddb: str) -> pl.Expr:
     return register_plugin_function(
         args=[expr],
         plugin_path=LIB,
         function_name="ip_lookup_country",
         is_elementwise=True,
+        kwargs={"maxminddb": maxminddb},
     )
 
 
-def ip_lookup_asn(expr: IntoExprColumn) -> pl.Expr:
+def ip_lookup_asn(expr: IntoExprColumn, maxminddb: str) -> pl.Expr:
     return register_plugin_function(
         args=[expr],
         plugin_path=LIB,
         function_name="ip_lookup_asn",
         is_elementwise=True,
+        kwargs={"maxminddb": maxminddb},
     )

@@ -1,14 +1,19 @@
 #![allow(clippy::unused_unit)]
+use serde::Deserialize;
 use polars::prelude::*;
 use pyo3_polars::derive::polars_expr;
 use std::{fmt::Write, net::IpAddr};
 use maxminddb::{geoip2, Reader};
 
+#[derive(Deserialize)]
+struct AddSuffixKwargs {
+    maxminddb: String,
+}
 
 #[polars_expr(output_type=String)]
-fn ip_lookup_city(inputs: &[Series]) -> PolarsResult<Series> {
+fn ip_lookup_city(inputs: &[Series], kwargs: AddSuffixKwargs) -> PolarsResult<Series> {
     let ca: &StringChunked = inputs[0].str()?;
-    let reader = maxminddb::Reader::open_readfile("GeoLite2-City.mmdb").unwrap();
+    let reader = maxminddb::Reader::open_readfile(kwargs.maxminddb).unwrap();
 
     let out: StringChunked = ca.apply_into_string_amortized(|value: &str, output: &mut String| {
         let city_name: &str;
@@ -35,9 +40,9 @@ fn ip_lookup_city(inputs: &[Series]) -> PolarsResult<Series> {
 }
 
 #[polars_expr(output_type=String)]
-fn ip_lookup_country(inputs: &[Series]) -> PolarsResult<Series> {
+fn ip_lookup_country(inputs: &[Series], kwargs: AddSuffixKwargs) -> PolarsResult<Series> {
     let ca: &StringChunked = inputs[0].str()?;
-    let reader: Reader<Vec<u8>> = maxminddb::Reader::open_readfile("GeoLite2-City.mmdb").unwrap();
+    let reader: Reader<Vec<u8>> = maxminddb::Reader::open_readfile(kwargs.maxminddb).unwrap();
 
     let out: StringChunked = ca.apply_into_string_amortized(|value: &str, output: &mut String| {
         let country_name: &str;
@@ -65,9 +70,9 @@ fn ip_lookup_country(inputs: &[Series]) -> PolarsResult<Series> {
 
 
 #[polars_expr(output_type=String)]
-fn ip_lookup_asn(inputs: &[Series]) -> PolarsResult<Series> {
+fn ip_lookup_asn(inputs: &[Series], kwargs: AddSuffixKwargs) -> PolarsResult<Series> {
     let ca: &StringChunked = inputs[0].str()?;
-    let reader = maxminddb::Reader::open_readfile("GeoLite2-ASN.mmdb").unwrap();
+    let reader = maxminddb::Reader::open_readfile(kwargs.maxminddb).unwrap();
 
     let out: StringChunked = ca.apply_into_string_amortized(|value: &str, output: &mut String| {
         let asn_name: &str;
