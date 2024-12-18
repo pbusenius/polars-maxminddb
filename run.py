@@ -2,9 +2,16 @@ import polars as pl
 from polars_maxminddb import ip_lookup_city, ip_lookup_country, ip_lookup_asn
 
 # Example DataFrame with IP addresses
-df = pl.DataFrame({
-    "ip_addresses": ["92.200.50.6", "195.90.212.198", "95.173.223.186", "121.37.156.226"],
-})
+df = pl.DataFrame(
+    {
+        "ip_addresses": [
+            "92.200.50.6",
+            "195.90.212.198",
+            "95.173.223.186",
+            "121.37.156.226",
+        ],
+    }
+)
 
 
 # Perform city lookup

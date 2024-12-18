@@ -15,7 +15,7 @@ def test_city():
     expected_df = pl.DataFrame(
         {
             "ip": ["92.200.50.6", "195.90.212.198", "95.173.223.186", "121.37.156.226"],
-            "city": ["Sundern", "Frankfurt am Main", "Lima", ""]
+            "city": ["Sundern", "Frankfurt am Main", "Lima", ""],
         }
     )
 
@@ -33,7 +33,7 @@ def test_country():
     expected_df = pl.DataFrame(
         {
             "ip": ["92.200.50.6", "195.90.212.198", "95.173.223.186", "121.37.156.226"],
-            "country": ["Germany", "Germany", "Peru", "China"]
+            "country": ["Germany", "Germany", "Peru", "China"],
         }
     )
 
@@ -51,7 +51,12 @@ def test_asn():
     expected_df = pl.DataFrame(
         {
             "ip": ["92.200.50.6", "195.90.212.198", "95.173.223.186", "121.37.156.226"],
-            "asn": ["Plusnet GmbH", "EVANZO e-commerce GmbH", "Datacamp Limited", "Huawei Cloud Service data center"]
+            "asn": [
+                "Plusnet GmbH",
+                "EVANZO e-commerce GmbH",
+                "Datacamp Limited",
+                "Huawei Cloud Service data center",
+            ],
         }
     )
 
