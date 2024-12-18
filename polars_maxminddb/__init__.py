@@ -24,6 +24,26 @@ def ip_lookup_city(expr: IntoExprColumn, maxminddb: str) -> pl.Expr:
     )
 
 
+def ip_lookup_latitude(expr: IntoExprColumn, maxminddb: str) -> pl.Expr:
+    return register_plugin_function(
+        args=[expr],
+        plugin_path=LIB,
+        function_name="ip_lookup_latitude",
+        is_elementwise=True,
+        kwargs={"maxminddb": maxminddb},
+    )
+
+
+def ip_lookup_longitude(expr: IntoExprColumn, maxminddb: str) -> pl.Expr:
+    return register_plugin_function(
+        args=[expr],
+        plugin_path=LIB,
+        function_name="ip_lookup_longitude",
+        is_elementwise=True,
+        kwargs={"maxminddb": maxminddb},
+    )
+
+
 def ip_lookup_country(expr: IntoExprColumn, maxminddb: str) -> pl.Expr:
     return register_plugin_function(
         args=[expr],
