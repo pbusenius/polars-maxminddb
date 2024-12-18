@@ -81,12 +81,55 @@ fn ip_lookup_asn(inputs: &[Series], kwargs: MaxmindDbFileKwargs) -> PolarsResult
         let resp: geoip2::Asn = reader.lookup(ip).unwrap();
         
         match resp.autonomous_system_organization {
-            Some(asn) =>         asn_name = asn,
+            Some(asn) => asn_name = asn,
             None => asn_name = "",
         }
 
         write!(output, "{}", asn_name).unwrap()
     });
+
+    Ok(out.into_series())
+}
+
+#[polars_expr(output_type = Float64)]
+fn ip_lookup_longitude(inputs: &[Series], kwargs: MaxmindDbFileKwargs) -> PolarsResult<Series> {
+    let ca: &StringChunked = inputs[0].str()?;
+    
+    let reader = maxminddb::Reader::open_readfile(kwargs.maxminddb).unwrap();
+
+    let out: Float64Chunked = ca
+        .into_iter()
+        .map(|opt_ip| {
+            opt_ip.and_then(|ip| {
+                let ip: IpAddr = ip.parse().ok()?;
+                let resp: geoip2::City = reader.lookup(ip).ok()?;
+
+        
+                resp.location.and_then(|location| location.longitude)
+            })
+        })
+        .collect();
+
+    Ok(out.into_series())
+}
+
+#[polars_expr(output_type = Float64)]
+fn ip_lookup_latitude(inputs: &[Series], kwargs: MaxmindDbFileKwargs) -> PolarsResult<Series> {
+    let ca: &StringChunked = inputs[0].str()?;
+    
+    let reader = maxminddb::Reader::open_readfile(kwargs.maxminddb).unwrap();
+
+    let out: Float64Chunked = ca
+        .into_iter()
+        .map(|opt_ip| {
+            opt_ip.and_then(|ip| {
+                let ip: IpAddr = ip.parse().ok()?;
+                let resp: geoip2::City = reader.lookup(ip).ok()?;
+
+                resp.location.and_then(|location| location.latitude)
+            })
+        })
+        .collect(); 
 
     Ok(out.into_series())
 }
